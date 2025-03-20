@@ -136,7 +136,154 @@ Handles **authentication and security**.
 
 ---
 
+# Real Estate Loan Management System - Implementation Document
+
+## **Project Overview**
+The **Real Estate Loan Management System** is an **ASP.NET Core 8 Web API** microservice-based application designed to help real estate developers perform financial appraisals. Users input financial parameters, generate multiple calculated financial models, and experiment with different values (interest rates, loan terms, purchase prices) to optimize financial projections. The system will first be implemented on **Azure**, followed by a transition to **AWS**.
+
+---
+
+## **Implementation Roadmap**
+This document outlines the step-by-step approach for implementing the system using **Clean Architecture, CQRS, Repository Pattern, Secure API Practices, and Azure Serverless Services**.
+
+---
+
+## **Phase 1: Project Setup & Environment Configuration**
+### **1.1 Initialize the Repository**
+- Create a new repository on **GitHub/Azure DevOps**.
+- Initialize the repository with:
+  - `.gitignore` (ASP.NET Core, Visual Studio, Azure DevOps CI/CD exclusions).
+  - Branching strategy: `main`, `develop`, `feature/*`.
+
+### **1.2 Set Up Solution Structure**
+- Create an **ASP.NET Core 8 Web API** solution.
+- Follow **Clean Architecture** principles:
+  ```
+  src/
+  ├── LoanManagement.Api (Web API Layer)
+  ├── LoanManagement.Application (Business Logic, CQRS)
+  ├── LoanManagement.Domain (Entities, Aggregates, Enums)
+  ├── LoanManagement.Infrastructure (EF Core, Repositories, Azure Services)
+  ├── LoanManagement.Persistence (Database Context, Configurations)
+  ├── LoanManagement.UnitTests (Unit Testing)
+  ```
+
+### **1.3 Setup Azure Cloud Resources**
+- **Azure SQL Database** (Structured Data for Loans & Models).
+- **Azure Cosmos DB** (Unstructured Data for Historical Models).
+- **Azure Key Vault** (Secrets & Credential Storage).
+- **Azure Service Bus** (Asynchronous Messaging).
+- **Azure Functions** (Background Processing for Calculations).
+- **Azure API Management** (API Gateway for Secure Access & Rate Limiting).
+
+---
+
+## **Phase 2: Authentication & Security**
+### **2.1 Implement JWT-Based Authentication**
+- Install `Microsoft.AspNetCore.Authentication.JwtBearer`.
+- Configure **Identity and Role-Based Access Control (RBAC)**.
+- Secure API endpoints with JWT tokens.
+
+### **2.2 Secure Application Configuration**
+- Store sensitive credentials in **Azure Key Vault**.
+- Use **Managed Identities** for secure API-to-API communication.
+- Implement **Azure API Management (APIM)** for centralized security.
+
+---
+
+## **Phase 3: Loan Management API**
+### **3.1 Implement Loan Input Models**
+- Define `LoanInputModel` with properties:
+  ```csharp
+  public class LoanInputModel {
+      public decimal PurchasePrice { get; set; }
+      public decimal TotalCosts { get; set; }
+      public int LoanTermLength { get; set; }
+      public DateTime PredictedLoanStartDate { get; set; }
+  }
+  ```
+- Use **Fluent Validation** to ensure data integrity.
+
+### **3.2 Implement Loan API Endpoints**
+- Define RESTful API endpoints:
+  - `POST /loans/create` → Submit new loan.
+  - `GET /loans/{id}` → Retrieve loan by ID.
+  - `GET /loans/{id}/calculated-models` → Retrieve calculated models.
+  - `PUT /loans/{id}` → Update loan data.
+  - `DELETE /loans/{id}` → Remove a loan entry.
+
+### **3.3 Implement Data Persistence Layer**
+- Use **EF Core with Azure SQL**.
+- Implement **Repository Pattern** for database access.
+- Apply **Unit of Work Pattern** to manage transactions.
+
+---
+
+## **Phase 4: Financial Appraisal API**
+### **4.1 Implement Calculation Logic**
+- Define business rules for financial calculations (LTP, LTC, LTV ratios).
+- Develop financial logic as **Domain Services** in `LoanManagement.Application`.
+
+### **4.2 Implement Background Processing with Azure Functions**
+- Use **Azure Service Bus** to trigger calculations asynchronously.
+- Deploy calculation logic as **Azure Functions**.
+- Store generated models in **Azure Cosmos DB**.
+
+---
+
+## **Phase 5: User Management & Role-Based Access**
+### **5.1 Implement User Registration & Authentication**
+- Use **ASP.NET Core Identity** for user authentication.
+- Implement Role-Based Access (`Admin`, `User`, `Investor`).
+- Configure **JWT authentication** and authorization policies.
+
+### **5.2 Implement API Security Policies**
+- Restrict API access using **RBAC Policies**.
+- Use **Azure API Management** for rate limiting & monitoring.
+
+---
+
+## **Phase 6: CI/CD & Deployment**
+### **6.1 Set Up CI/CD Pipeline in Azure DevOps**
+- Configure **Azure DevOps Pipelines** for build & deployment.
+- Use **Bicep/Terraform** to automate infrastructure provisioning.
+
+### **6.2 Deploy Microservices to Azure**
+- Deploy **Loan Management API** to **Azure App Services**.
+- Deploy **Financial Appraisal API** to **Azure Functions**.
+- Enable auto-scaling for high availability.
+
+---
+
+## **Phase 7: Monitoring & Performance Optimization**
+### **7.1 Enable Logging & Monitoring**
+- Use **Azure Application Insights** for real-time telemetry.
+- Monitor database performance using **Azure SQL Insights**.
+
+### **7.2 Optimize Performance**
+- Implement **caching strategies** using **Azure Cache for Redis**.
+- Optimize **EF Core Queries & Cosmos DB indexing**.
+
+---
+
+## **Phase 8: Future Enhancements & AWS Transition**
+### **8.1 Review & Optimize Architecture**
+- Conduct **code reviews & scalability testing**.
+- Identify **security & performance improvements**.
+
+### **8.2 Transition to AWS**
+- Replace **Azure SQL** with **Amazon RDS**.
+- Replace **Azure Cosmos DB** with **Amazon DynamoDB**.
+- Replace **Azure Functions** with **AWS Lambda**.
+- Replace **Azure Service Bus** with **Amazon SQS**.
+
+---
+
 ## **Conclusion**
-This project delivers a **scalable, secure, and high-performance** Real Estate Loan Management System using the best industry practices and Azure cloud ecosystem. The architecture ensures **modularity, maintainability, and ease of future enhancements** while optimizing cloud cost and performance.
+This structured implementation ensures a **secure, scalable, and maintainable** architecture for the **Real Estate Loan Management System**. The approach is optimized for **Azure deployment first**, with a planned transition to **AWS**.
+
+
+
+
 
 
